@@ -44,27 +44,30 @@ export function Navbar() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-20">
             {/* Logo */}
-            <motion.a
-              href="#home"
-              onClick={(e) => {
-                e.preventDefault();
-                handleNavClick('#home');
-              }}
+            <motion.div
               className="flex items-center gap-2.5"
               whileHover={{ scale: 1.02 }}
             >
-              <div className="w-10 h-10 bg-gradient-to-br from-blue-500 via-indigo-500 to-purple-500 rounded-xl flex items-center justify-center shadow-lg shadow-indigo-500/30">
+              <div 
+                onClick={() => {
+                  window.open("https://www.utopiaagency.cc", "_blank");
+                }}
+              className="w-10 h-10 cursor-pointer bg-gradient-to-br from-blue-500 via-indigo-500 to-purple-500 rounded-xl flex items-center justify-center shadow-lg shadow-indigo-500/30">
                 {/* <Sparkles className="w-5 h-5 text-white" /> */}
                 <Image src="/logo1.png" alt="" width={40} height={40} style={{ maxWidth: '60%', height: 'auto' }} />
               </div>
-              <div className="w-10 h-10 bg-gradient-to-br from-[#C6A5FF] via-[#A46BFF] to-[#6E4BCF] rounded-xl flex items-center justify-center shadow-lg shadow-indigo-500/30">
+              <div 
+                onClick={(e) => {
+                handleNavClick('#home');
+              }}
+              className="w-10 h-10 cursor-pointer bg-gradient-to-br from-[#C6A5FF] via-[#A46BFF] to-[#6E4BCF] rounded-xl flex items-center justify-center shadow-lg shadow-indigo-500/30">
                 <Image src="/logobg.png" alt="" width={40} height={40} style={{ maxWidth: '80%', height: 'auto' }} />
               </div>
               {/* <span className="text-xl font-bold text-white tracking-tight">
                 {SITE_CONFIG.name.split(' ')[0]}
                 <span className="text-gradient">{SITE_CONFIG.name.split(' ')[1]}</span>
               </span> */}
-            </motion.a>
+            </motion.div>
 
             {/* Desktop Navigation */}
             <nav className="hidden lg:flex items-center gap-1">

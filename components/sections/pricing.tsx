@@ -187,7 +187,7 @@ Guide 2026 and join thousands of tech innovators.
           className="text-center"
         >
           <p className="text-slate-400 text-sm mb-4">
-            100% money-back guarantee. Cancel up to 60 days before the event.
+            100% money-back guarantee. Cancel up to 6 days before the event.
           </p>
           <div className="flex flex-wrap justify-center items-center gap-4 text-slate-500 text-xs">
             <span className="flex items-center gap-2">

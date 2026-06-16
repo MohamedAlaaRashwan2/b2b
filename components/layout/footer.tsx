@@ -95,9 +95,9 @@ export function Footer() {
           <div>
             <h4 className="text-white font-semibold mb-4">Resources</h4>
             <ul className="space-y-3">
-              <li><a href="#" className="text-slate-400 hover:text-white transition-colors duration-300">Blog</a></li>
+              <li><a href="#gallery" className="text-slate-400 hover:text-white transition-colors duration-300">Gallery</a></li>
               <li><a href="#faq" className="text-slate-400 hover:text-white transition-colors duration-300">FAQ</a></li>
-              <li><a href="#" className="text-slate-400 hover:text-white transition-colors duration-300">Press Kit</a></li>
+              <li><a href="#speakers" className="text-slate-400 hover:text-white transition-colors duration-300">Speakers</a></li>
               <li><a href="#contact" className="text-slate-400 hover:text-white transition-colors duration-300">Support</a></li>
             </ul>
           </div>
@@ -117,8 +117,7 @@ export function Footer() {
         {/* Bottom Bar */}
         <div className="mt-12 pt-8 border-t border-white/10 flex flex-col sm:flex-row items-center justify-between gap-4">
           <p className="text-slate-400 text-sm">
-            � {new Date().getFullYear()} Business
-Guide. All rights reserved.
+            © {new Date().getFullYear()} BusinessGuide. All rights reserved.
           </p>
 
           {/* Social Links */}
