@@ -41,7 +41,7 @@ export function Footer() {
                 <Sparkles className="w-5 h-5 text-white" />
               </div>
               <span className="text-xl font-bold text-white tracking-tight">
-                Tech<span className="text-gradient">Summit</span>
+                Business<span className="text-gradient">Guide</span>
               </span>
             </motion.a>
             <p className="text-slate-400 mb-6 leading-relaxed">

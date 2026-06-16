@@ -7,19 +7,17 @@ import { ScrollProgress } from '@/components/layout/scroll-progress';
 import { BackToTop } from '@/components/layout/back-to-top';
 import { Hero } from '@/components/sections/hero';
 import { About } from '@/components/sections/about';
-import { Highlights } from '@/components/sections/highlights';
 import { Speakers } from '@/components/sections/speakers';
 import { Schedule } from '@/components/sections/schedule';
 import { Gallery } from '@/components/sections/gallery';
 import { Pricing } from '@/components/sections/pricing';
 import { Registration } from '@/components/sections/registration';
-import { Testimonials } from '@/components/sections/testimonials';
-import { Sponsors } from '@/components/sections/sponsors';
 import { Location } from '@/components/sections/location';
 import { FAQ } from '@/components/sections/faq';
 import { Newsletter } from '@/components/sections/newsletter';
 import { Contact } from '@/components/sections/contact';
 import { useState, useEffect } from 'react';
+import Image from 'next/image';
 
 function LoadingScreen() {
   return (
@@ -36,7 +34,7 @@ function LoadingScreen() {
           transition={{ duration: 2, repeat: Infinity, ease: 'linear' }}
           className="w-16 h-16 mx-auto mb-6 rounded-xl bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 flex items-center justify-center"
         >
-          <span className="text-2xl font-bold text-white">TS</span>
+        <Image src="/logobg.png" alt="" width={40} height={40} style={{ maxWidth: '80%', height: 'auto' }} />
         </motion.div>
         <motion.div
           initial={{ width: 0 }}
