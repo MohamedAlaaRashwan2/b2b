@@ -387,7 +387,7 @@ export const PRICING_TIERS: PricingTier[] = [
   {
     id: '2',
     name: 'Standard',
-    price: 499,
+    price: 999,
     description: 'Great value for professionals seeking comprehensive access',
     features: [
       'Everything in Early Bird',

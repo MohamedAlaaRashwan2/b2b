@@ -63,7 +63,7 @@ function PricingCard({ tier, index }: { tier: PricingTier; index: number }) {
           {/* Price */}
           <div className="mb-6">
             <div className="flex items-baseline gap-2">
-              <span className="text-5xl font-bold text-white">${tier.price}</span>
+              <span className="text-5xl font-bold text-white">EG {tier.price}</span>
               {tier.originalPrice && (
                 <span className="text-xl text-slate-500 line-through">${tier.originalPrice}</span>
               )}
