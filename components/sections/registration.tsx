@@ -458,13 +458,13 @@ const submitToServer = async () => {
 
   {paymentMethod === "instapay" && (
     <p className="text-blue-400 font-semibold">
-      Instapay: 01234567890
+      Instapay: 01288333841
     </p>
   )}
 
   {paymentMethod === "vodafone_cash" && (
     <p className="text-red-400 font-semibold">
-      Vodafone Cash: 01098765432
+      Vodafone Cash: 01021623615
     </p>
   )}
 </div>
