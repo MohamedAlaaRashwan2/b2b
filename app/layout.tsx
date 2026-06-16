@@ -20,6 +20,11 @@ export const metadata: Metadata = {
     default: `${SITE_CONFIG.name} | ${EVENT_INFO.tagline}`,
     template: `%s | ${SITE_CONFIG.name}`,
   },
+    icons: {
+    icon: '/Logo2.ico',
+    shortcut: '/Logo2.ico',
+    apple: '/apple-touch-icon.png',
+  },
   description: `Join us at ${SITE_CONFIG.name} - ${EVENT_INFO.description} Experience keynotes from industry leaders, hands-on workshops, and unparalleled networking opportunities.`,
   keywords: [
     'tech summit',
