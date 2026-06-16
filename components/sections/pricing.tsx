@@ -22,7 +22,7 @@ function PricingCard({ tier, index }: { tier: PricingTier; index: number }) {
       viewport={{ once: true }}
       transition={{ delay: index * 0.15 }}
       whileHover={{ y: -10 }}
-      className={`relative ${tier.recommended ? 'lg:-mt-4 lg:mb-4' : ''}`}
+      className={`relative ${tier.recommended ? 'lg:-mt-4 lg:mb-4' : ''} md:flex justify-center`}
     >
       {tier.recommended && (
         <div className="absolute -top-4 left-1/2 -translate-x-1/2 z-10">
@@ -116,6 +116,12 @@ function PricingCard({ tier, index }: { tier: PricingTier; index: number }) {
 
           {/* CTA */}
           <motion.button
+          onClick={() =>
+  !tier.soldOut &&
+  document.getElementById('register')?.scrollIntoView({
+    behavior: 'smooth',
+  })
+}
             whileHover={{ scale: 1.02 }}
             whileTap={{ scale: 0.98 }}
             className={`w-full py-4 rounded-xl font-semibold transition-all duration-300 ${
@@ -161,12 +167,13 @@ export function Pricing() {
             Choose Your <span className="text-gradient-gold">Ticket</span>
           </h2>
           <p className="text-lg text-slate-400 leading-relaxed">
-            Early bird pricing ends soon. Secure your spot at TechSummit 2026 and join thousands of tech innovators.
+            Early bird pricing ends soon. Secure your spot at Business
+Guide 2026 and join thousands of tech innovators.
           </p>
         </motion.div>
 
         {/* Pricing Cards */}
-        <div className="grid md:grid-cols-3 gap-6 mb-16">
+        <div className="grid md-w-fa gap-6 mb-16">
           {PRICING_TIERS.map((tier, index) => (
             <PricingCard key={tier.id} tier={tier} index={index} />
           ))}

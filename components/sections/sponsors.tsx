@@ -126,7 +126,8 @@ export function Sponsors() {
             <span className="text-gradient-gold">Premium</span> Sponsors
           </h2>
           <p className="text-lg text-slate-400 leading-relaxed">
-            TechSummit is made possible by the generous support of our sponsors and partners.
+            Business
+Guide is made possible by the generous support of our sponsors and partners.
           </p>
         </motion.div>
 
@@ -147,7 +148,7 @@ export function Sponsors() {
         </div>
 
         {/* Become a Sponsor CTA */}
-        <motion.div
+        {/* <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
@@ -158,7 +159,7 @@ export function Sponsors() {
               Interested in Sponsorship?
             </h3>
             <p className="text-slate-400 mb-6">
-              Join the world&apos;s leading tech brands in supporting TechSummit 2026. Reach 5000+ tech professionals.
+              Join the world&apos;s leading tech brands in supporting BusinessGuide 2026. Reach 5000+ tech professionals.
             </p>
             <motion.button
               whileHover={{ scale: 1.02 }}
@@ -168,7 +169,7 @@ export function Sponsors() {
               Become a Sponsor
             </motion.button>
           </div>
-        </motion.div>
+        </motion.div> */}
       </div>
     </section>
   );

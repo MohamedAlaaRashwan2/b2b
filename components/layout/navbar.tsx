@@ -57,8 +57,8 @@ export function Navbar() {
                 {/* <Sparkles className="w-5 h-5 text-white" /> */}
                 <Image src="/logo1.png" alt="" width={40} height={40} style={{ maxWidth: '60%', height: 'auto' }} />
               </div>
-              <div className="w-10 h-10 bg-gradient-to-br from-blue-500 via-indigo-500 to-purple-500 rounded-xl flex items-center justify-center shadow-lg shadow-indigo-500/30">
-              BG
+              <div className="w-10 h-10 bg-gradient-to-br from-[#C6A5FF] via-[#A46BFF] to-[#6E4BCF] rounded-xl flex items-center justify-center shadow-lg shadow-indigo-500/30">
+                <Image src="/logobg.png" alt="" width={40} height={40} style={{ maxWidth: '80%', height: 'auto' }} />
               </div>
               {/* <span className="text-xl font-bold text-white tracking-tight">
                 {SITE_CONFIG.name.split(' ')[0]}

@@ -20,7 +20,6 @@ export function About() {
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,rgba(59,130,246,0.15),transparent)]" />
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_bottom_right,rgba(168,85,247,0.1),transparent)]" />
       </div>
-
       <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Section Header */}
         <motion.div
@@ -38,11 +37,10 @@ export function About() {
             About the Event
           </motion.span>
           <h2 className="text-4xl md:text-5xl font-bold text-white mb-6 tracking-tight">
-            Why <span className="text-gradient">TechSummit</span>?
+            Why <span className="text-gradient">Business Guide</span>?
           </h2>
           <p className="text-lg text-slate-400 leading-relaxed">
-            TechSummit brings together the brightest minds in technology for three transformative days of learning, networking, and innovation. Experience keynotes from industry leaders, hands-on workshops, and unparalleled networking opportunities.
-          </p>
+           Business Guide helps you understand how successful businesses truly operate. Through real-world insights from industry experts, you'll gain practical knowledge in Marketing, Management, ERP Systems, Accounting, Business Development, and Entrepreneurship—equipping you with the skills and understanding needed to grow your career or business with confidence.          </p>
         </motion.div>
 
         {/* Main Content */}
@@ -62,8 +60,7 @@ export function About() {
                 Our Mission
               </h3>
               <p className="text-slate-400 leading-relaxed">
-                To empower tech professionals with cutting-edge knowledge, meaningful connections, and practical skills that drive career and business success in an ever-evolving landscape.
-              </p>
+               To bring clarity, direction, and real business insights by helping individuals understand the essential fundamentals of Marketing, Management, ERP Systems, Accounting, and Business Development through practical knowledge and real-world experiences.              </p>
             </div>
 
             <div className="glass-card p-6 rounded-2xl">
@@ -74,8 +71,7 @@ export function About() {
                 Our Vision
               </h3>
               <p className="text-slate-400 leading-relaxed">
-                To be the premier platform where technology leaders, innovators, and enthusiasts converge to shape the future of technology through collaboration and shared knowledge.
-              </p>
+               To become a leading platform that helps individuals gain a deeper understanding of how the business world works through practical insights, real experiences, and knowledge of the essential business fundamentals.              </p>
             </div>
 
             <div className="glass-card p-6 rounded-2xl">
@@ -87,9 +83,9 @@ export function About() {
               </h3>
               <ul className="space-y-2">
                 {[
-                  'Learn from 50+ industry experts',
-                  'Network with 5000+ tech professionals',
-                  'Access 100+ sessions covering latest trends',
+                  'Learn from 4+ industry experts',
+                  'Network with 200+ Business professionals',
+                  'Access 8+ sessions covering latest trends',
                   'Earn professional certifications',
                   'Discover investment opportunities',
                 ].map((item, index) => (

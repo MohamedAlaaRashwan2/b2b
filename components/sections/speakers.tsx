@@ -1,15 +1,17 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { Linkedin, Twitter, Globe } from 'lucide-react';
+import { Linkedin, Globe,  } from 'lucide-react';
+import { FaFacebookF,FaInstagram  } from "react-icons/fa";
 import { SPEAKERS } from '@/constants';
 import { Speaker } from '@/types';
 import Image from 'next/image';
 
 const iconMap = {
   linkedin: Linkedin,
-  twitter: Twitter,
-  website: Globe,
+  // twitter: Twitter,
+  facebook: FaFacebookF,
+  instagram: FaInstagram,
 };
 
 function SpeakerCard({ speaker, index }: { speaker: Speaker; index: number }) {
@@ -24,7 +26,7 @@ function SpeakerCard({ speaker, index }: { speaker: Speaker; index: number }) {
     >
       <div className="glass-card rounded-2xl overflow-hidden relative">
         {/* Image */}
-        <div className="relative h-72 overflow-hidden">
+        <div className="relative h-[24rem] md:h-72 overflow-hidden">
           <Image
             src={speaker.image}
             alt={speaker.name}
@@ -47,28 +49,28 @@ function SpeakerCard({ speaker, index }: { speaker: Speaker; index: number }) {
                 <Linkedin className="w-4 h-4" />
               </motion.a>
             )}
-            {speaker.social.twitter && (
+            {speaker.social.facebook && (
               <motion.a
-                href={speaker.social.twitter}
+                href={speaker.social.facebook}
                 target="_blank"
                 rel="noopener noreferrer"
                 whileHover={{ scale: 1.1 }}
                 whileTap={{ scale: 0.95 }}
                 className="w-10 h-10 rounded-full bg-white/10 backdrop-blur-sm flex items-center justify-center text-white hover:bg-sky-600 transition-colors"
               >
-                <Twitter className="w-4 h-4" />
+                <FaFacebookF className="w-4 h-4" />
               </motion.a>
             )}
-            {speaker.social.website && (
+            {speaker.social.instagram && (
               <motion.a
-                href={speaker.social.website}
+                href={speaker.social.instagram}
                 target="_blank"
                 rel="noopener noreferrer"
                 whileHover={{ scale: 1.1 }}
                 whileTap={{ scale: 0.95 }}
                 className="w-10 h-10 rounded-full bg-white/10 backdrop-blur-sm flex items-center justify-center text-white hover:bg-indigo-600 transition-colors"
               >
-                <Globe className="w-4 h-4" />
+                <FaInstagram className="w-4 h-4" />
               </motion.a>
             )}
           </div>
@@ -148,13 +150,6 @@ export function Speakers() {
           viewport={{ once: true }}
           className="text-center mt-12"
         >
-          <motion.button
-            whileHover={{ scale: 1.02 }}
-            whileTap={{ scale: 0.98 }}
-            className="btn-glass"
-          >
-            View All 50+ Speakers
-          </motion.button>
         </motion.div>
       </div>
     </section>

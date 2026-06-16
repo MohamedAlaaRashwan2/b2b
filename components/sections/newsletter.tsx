@@ -7,12 +7,31 @@ import { Mail, Bell, Sparkles, CheckCircle } from 'lucide-react';
 export function Newsletter() {
   const [email, setEmail] = useState('');
   const [isSubmitted, setIsSubmitted] = useState(false);
-
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (email) {
-      setIsSubmitted(true);
-      setEmail('');
+  
+    const res = await fetch("https://lightslategray-skunk-815178.hostingersite.com/register.php", {
+      method: "POST",
+  headers: {
+    "Content-Type": "application/json",
+  },
+  body: JSON.stringify({
+    name: "test",
+    email: email,
+  }),    });
+  
+    const text = await res.text();
+    console.log("SERVER RESPONSE:", text);
+  
+    try {
+      const data = JSON.parse(text);
+  
+      if (data.success) {
+        setIsSubmitted(true);
+        setEmail("");
+      }
+    } catch (err) {
+      console.error("Not JSON Response:", text);
     }
   };
 

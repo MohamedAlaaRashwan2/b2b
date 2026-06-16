@@ -1,22 +1,26 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
 import { motion, AnimatePresence } from 'framer-motion';
-import { CheckCircle, Loader2, User, Mail, Phone, Building, Briefcase, Globe, MessageSquare } from 'lucide-react';
-import { PRICING_TIERS } from '@/constants';
+import { CheckCircle, Loader2, User, Mail, Phone, Building, Briefcase, Globe, Upload, X, CheckCircle2, BadgePercent, Trash2 } from 'lucide-react';
+import { TICKET_PRICE, BADR_UNIVERSITY_DISCOUNT } from '@/constants';
 
 const registrationSchema = z.object({
-  fullName: z.string().min(2, 'Name must be at least 2 characters').max(100, 'Name is too long'),
+  fullName: z.string().min(2, 'Name must be at least 2 characters').max(100),
   email: z.string().email('Please enter a valid email address'),
   phone: z.string().min(10, 'Please enter a valid phone number'),
-  company: z.string().min(2, 'Company name is required'),
-  jobTitle: z.string().min(2, 'Job title is required'),
+  // company: z.string().min(2, 'Company name is required'),
+  // jobTitle: z.string().min(2, 'Job title is required'),
   country: z.string().min(1, 'Please select a country'),
-  ticketType: z.string().min(1, 'Please select a ticket type'),
-  specialRequests: z.string().optional(),
+  isBadrStudent: z.boolean().default(false),
+  senderNumber: z.string().min(10, 'Enter a valid number'),
+  transactionId: z.string().optional(),
+  paymentMethod: z.enum(['instapay', 'vodafone_cash'], {required_error: "Please select payment method"})
+}).refine((data) => {
+  return true; // File validation handled separately
 });
 
 type RegistrationFormData = z.infer<typeof registrationSchema>;
@@ -24,43 +28,132 @@ type RegistrationFormData = z.infer<typeof registrationSchema>;
 const countries = [
   'United States', 'Canada', 'United Kingdom', 'Germany', 'France', 'Japan',
   'Australia', 'India', 'Brazil', 'Netherlands', 'Singapore', 'South Korea',
-  'China', 'Mexico', 'Spain', 'Italy', 'Switzerland', 'Sweden', 'Other'
+  'Egypt', 'Other'
 ].sort();
 
 export function Registration() {
   const [isSubmitted, setIsSubmitted] = useState(false);
-
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [discountApplied, setDiscountApplied] = useState(false);
+  const [studentIdFile, setStudentIdFile] = useState<File | null>(null);
+  const [studentIdPreview, setStudentIdPreview] = useState<string | null>(null);
+  const [fileError, setFileError] = useState<string | null>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const [showPaymentModal, setShowPaymentModal] = useState(false);
+  const [pendingData, setPendingData] = useState<any>(null);
+  const [paymentConfirmed, setPaymentConfirmed] = useState(false);
+  const [warning, setWarning] = useState("");
   const {
     register,
     handleSubmit,
-    formState: { errors, isSubmitting },
+    formState: { errors },
     reset,
+    watch,
   } = useForm<RegistrationFormData>({
     resolver: zodResolver(registrationSchema),
+    defaultValues: {
+      isBadrStudent: false,
+    },
+  });
+  
+  const paymentMethod = watch("paymentMethod");
+  const isBadrStudent = watch('isBadrStudent');
+
+  const discountAmount = discountApplied ? (TICKET_PRICE * BADR_UNIVERSITY_DISCOUNT.percentage) / 100 : 0;
+  const finalPrice = discountApplied ? TICKET_PRICE - discountAmount : TICKET_PRICE;
+
+  const validateFile = (file: File): string | null => {
+    if (!BADR_UNIVERSITY_DISCOUNT.allowedFileTypes.includes(file.type)) {
+      return 'Please upload a valid image file (JPG, JPEG, or PNG)';
+    }
+    const maxSize = BADR_UNIVERSITY_DISCOUNT.maxFileSizeMB * 1024 * 1024;
+    if (file.size > maxSize) {
+      return `File size must be less than ${BADR_UNIVERSITY_DISCOUNT.maxFileSizeMB}MB`;
+    }
+    return null;
+  };
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      const error = validateFile(file);
+      if (error) {
+        setFileError(error);
+        setStudentIdFile(null);
+        setStudentIdPreview(null);
+        setDiscountApplied(false);
+        return;
+      }
+      setFileError(null);
+      setStudentIdFile(file);
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setStudentIdPreview(reader.result as string);
+      };
+      reader.readAsDataURL(file);
+      setDiscountApplied(true);
+    }
+  };
+
+  const handleRemoveFile = () => {
+    setStudentIdFile(null);
+    setStudentIdPreview(null);
+    setDiscountApplied(false);
+    setFileError(null);
+    if (fileInputRef.current) {
+      fileInputRef.current.value = '';
+    }
+  };
+
+const onSubmit = async (data: RegistrationFormData) => {
+  setPendingData(data);
+  setShowPaymentModal(true);
+};
+
+const handleConfirmPaid = async () => {
+  setPaymentConfirmed(true);
+  setShowPaymentModal(false);
+  setWarning("");
+  await submitToServer(); // هنفصلها تحت
+};
+
+const submitToServer = async () => {
+  setIsSubmitting(true);
+
+  const data = pendingData;
+
+  if (!data) return;
+
+  const formData = new FormData();
+
+  formData.append("fullName", data.fullName);
+  formData.append("email", data.email);
+  formData.append("phone", data.phone);
+  formData.append("country", data.country);
+  formData.append("paymentMethod", data.paymentMethod);
+  formData.append("senderNumber", data.senderNumber);
+  formData.append("finalPrice", String(finalPrice));
+
+  const res = await fetch("https://lightslategray-skunk-815178.hostingersite.com/register1.php", {
+    method: "POST",
+    body: formData,
   });
 
-  const onSubmit = async (data: RegistrationFormData) => {
-    // Simulate API call
-    await new Promise((resolve) => setTimeout(resolve, 2000));
-    console.log(data);
+  const result = await res.json();
+
+  setIsSubmitting(false);
+
+  if (result.success) {
     setIsSubmitted(true);
     reset();
-  };
-
-  const handleReset = () => {
-    setIsSubmitted(false);
-  };
+  } else {
+    setWarning(result.message || "Something went wrong");
+  }
+};
 
   return (
-    <section id="register" className="relative py-24 md:py-32 bg-slate-950 overflow-hidden">
-      {/* Background */}
-      <div className="absolute inset-0 opacity-20">
-        <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-blue-500/20 rounded-full blur-3xl" />
-        <div className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-indigo-500/20 rounded-full blur-3xl" />
-      </div>
-
+    <section id="register" className="relative py-16 md:py-20 bg-slate-950">
       <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Section Header */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -79,44 +172,38 @@ export function Registration() {
             Register <span className="text-gradient">Now</span>
           </h2>
           <p className="text-lg text-slate-400 leading-relaxed">
-            Complete your registration and join thousands of tech innovators at TechSummit 2026.
+            Complete your registration and join thousands of BusinessGuide innovators at Busen 2026.
           </p>
         </motion.div>
 
         <AnimatePresence mode="popLayout">
           {isSubmitted ? (
             <motion.div
-              initial={{ opacity: 0, scale: 0.9 }}
+              initial={{ opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}
-              exit={{ opacity: 0, scale: 0.9 }}
-              className="max-w-2xl mx-auto"
+              exit={{ opacity: 0, scale: 0.95 }}
+              className="max-w-xl mx-auto"
             >
-              <motion.div
-                className="glass-card p-12 rounded-2xl text-center"
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-              >
+              <div className="glass-card p-8 rounded-xl text-center">
                 <motion.div
                   initial={{ scale: 0 }}
                   animate={{ scale: 1 }}
                   transition={{ delay: 0.2, type: 'spring', stiffness: 200 }}
-                  className="w-20 h-20 mx-auto mb-6 rounded-full bg-gradient-to-r from-green-500 to-emerald-500 flex items-center justify-center"
+                  className="w-16 h-16 mx-auto mb-4 rounded-full bg-gradient-to-r from-green-500 to-emerald-500 flex items-center justify-center"
                 >
-                  <CheckCircle className="w-10 h-10 text-white" />
+                  <CheckCircle className="w-8 h-8 text-white" />
                 </motion.div>
-                <h3 className="text-2xl font-bold text-white mb-3">Registration Successful!</h3>
-                <p className="text-slate-400 mb-6">
-                  Thank you for registering for TechSummit 2026. A confirmation email has been sent to your inbox.
-                </p>
+                <h3 className="text-xl font-bold text-white mb-2">Registration Successful!</h3>
+                <p className="text-slate-400 mb-6">Check your email for confirmation.</p>
                 <motion.button
                   whileHover={{ scale: 1.02 }}
                   whileTap={{ scale: 0.98 }}
-                  onClick={handleReset}
+                  onClick={() => setIsSubmitted(false)}
                   className="btn-premium"
                 >
-                  Register Another Attendee
+                  Register Another
                 </motion.button>
-              </motion.div>
+              </div>
             </motion.div>
           ) : (
             <motion.form
@@ -125,213 +212,308 @@ export function Registration() {
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               onSubmit={handleSubmit(onSubmit)}
-              className="max-w-4xl mx-auto"
+              className="max-w-2xl mx-auto"
             >
-              <div className="glass-card p-8 md:p-12 rounded-2xl">
-                <div className="grid md:grid-cols-2 gap-6">
+              <div className="glass-card p-6 md:p-8 rounded-xl">
+                {/* Price Summary */}
+                <div className="mb-6 p-4 rounded-lg bg-slate-800/50 border border-slate-700">
+                  <div className="flex items-center justify-between mb-2">
+                    <span className="text-slate-400">Ticket Price:</span>
+                    <span className="text-white">${TICKET_PRICE}</span>
+                  </div>
+                  {discountApplied && (
+                    <>
+                      <div className="flex items-center justify-between mb-2">
+                        <span className="text-green-400 flex items-center gap-1">
+                          <BadgePercent className="w-4 h-4" />
+                          Student Discount (-{BADR_UNIVERSITY_DISCOUNT.percentage}%):
+                        </span>
+                        <span className="text-green-400">-${discountAmount.toFixed(2)}</span>
+                      </div>
+                      <div className="flex items-center justify-between pt-2 border-t border-slate-600">
+                        <span className="text-white font-medium">Final Price:</span>
+                        <span className="text-2xl font-bold text-green-400">${finalPrice.toFixed(2)}</span>
+                      </div>
+                    </>
+                  )}
+                  {!discountApplied && (
+                    <div className="flex items-center justify-between pt-2 border-t border-slate-600">
+                      <span className="text-white font-medium">Total:</span>
+                      <span className="text-2xl font-bold text-white">${TICKET_PRICE}</span>
+                    </div>
+                  )}
+                </div>
+
+                <div className="grid md:grid-cols-2 gap-4 mb-4">
                   {/* Full Name */}
-                  <div className="space-y-2">
-                    <label htmlFor="fullName" className="text-sm font-medium text-slate-300 flex items-center gap-2">
-                      <User className="w-4 h-4 text-blue-400" />
-                      Full Name *
+                  <div>
+                    <label className="text-sm text-slate-300 flex items-center gap-1 mb-1">
+                      <User className="w-3 h-3" /> Full Name *
                     </label>
                     <input
                       {...register('fullName')}
-                      type="text"
-                      id="fullName"
+                      className={`w-full px-4 py-2.5 rounded-lg bg-white/5 border ${
+                        errors.fullName ? 'border-red-500/50' : 'border-white/10 focus:border-blue-500/50'
+                      } text-white placeholder:text-slate-500 focus:outline-none transition-colors`}
                       placeholder="John Doe"
-                      className={`w-full px-4 py-3 rounded-xl bg-white/5 border ${
-                        errors.fullName
-                          ? 'border-red-500/50'
-                          : 'border-white/10 focus:border-blue-500/50'
-                      } text-white placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20 transition-all duration-300`}
                     />
-                    {errors.fullName && (
-                      <p className="text-red-400 text-sm">{errors.fullName.message}</p>
-                    )}
+                    {errors.fullName && <p className="text-red-400 text-xs mt-1">{errors.fullName.message}</p>}
                   </div>
 
                   {/* Email */}
-                  <div className="space-y-2">
-                    <label htmlFor="email" className="text-sm font-medium text-slate-300 flex items-center gap-2">
-                      <Mail className="w-4 h-4 text-blue-400" />
-                      Email Address *
+                  <div>
+                    <label className="text-sm text-slate-300 flex items-center gap-1 mb-1">
+                      <Mail className="w-3 h-3" /> Email *
                     </label>
                     <input
                       {...register('email')}
                       type="email"
-                      id="email"
+                      className={`w-full px-4 py-2.5 rounded-lg bg-white/5 border ${
+                        errors.email ? 'border-red-500/50' : 'border-white/10 focus:border-blue-500/50'
+                      } text-white placeholder:text-slate-500 focus:outline-none transition-colors`}
                       placeholder="john@example.com"
-                      className={`w-full px-4 py-3 rounded-xl bg-white/5 border ${
-                        errors.email
-                          ? 'border-red-500/50'
-                          : 'border-white/10 focus:border-blue-500/50'
-                      } text-white placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20 transition-all duration-300`}
                     />
-                    {errors.email && (
-                      <p className="text-red-400 text-sm">{errors.email.message}</p>
-                    )}
+                    {errors.email && <p className="text-red-400 text-xs mt-1">{errors.email.message}</p>}
                   </div>
 
                   {/* Phone */}
-                  <div className="space-y-2">
-                    <label htmlFor="phone" className="text-sm font-medium text-slate-300 flex items-center gap-2">
-                      <Phone className="w-4 h-4 text-blue-400" />
-                      Phone Number *
+                  <div>
+                    <label className="text-sm text-slate-300 flex items-center gap-1 mb-1">
+                      <Phone className="w-3 h-3" /> Phone *
                     </label>
                     <input
                       {...register('phone')}
                       type="tel"
-                      id="phone"
+                      className={`w-full px-4 py-2.5 rounded-lg bg-white/5 border ${
+                        errors.phone ? 'border-red-500/50' : 'border-white/10 focus:border-blue-500/50'
+                      } text-white placeholder:text-slate-500 focus:outline-none transition-colors`}
                       placeholder="+1 (555) 123-4567"
-                      className={`w-full px-4 py-3 rounded-xl bg-white/5 border ${
-                        errors.phone
-                          ? 'border-red-500/50'
-                          : 'border-white/10 focus:border-blue-500/50'
-                      } text-white placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20 transition-all duration-300`}
                     />
-                    {errors.phone && (
-                      <p className="text-red-400 text-sm">{errors.phone.message}</p>
-                    )}
+                    {errors.phone && <p className="text-red-400 text-xs mt-1">{errors.phone.message}</p>}
                   </div>
 
                   {/* Company */}
-                  <div className="space-y-2">
-                    <label htmlFor="company" className="text-sm font-medium text-slate-300 flex items-center gap-2">
-                      <Building className="w-4 h-4 text-blue-400" />
-                      Company Name *
+                  {/* <div>
+                    <label className="text-sm text-slate-300 flex items-center gap-1 mb-1">
+                      <Building className="w-3 h-3" /> Company *
                     </label>
                     <input
                       {...register('company')}
-                      type="text"
-                      id="company"
+                      className={`w-full px-4 py-2.5 rounded-lg bg-white/5 border ${
+                        errors.company ? 'border-red-500/50' : 'border-white/10 focus:border-blue-500/50'
+                      } text-white placeholder:text-slate-500 focus:outline-none transition-colors`}
                       placeholder="TechCorp Inc"
-                      className={`w-full px-4 py-3 rounded-xl bg-white/5 border ${
-                        errors.company
-                          ? 'border-red-500/50'
-                          : 'border-white/10 focus:border-blue-500/50'
-                      } text-white placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20 transition-all duration-300`}
                     />
-                    {errors.company && (
-                      <p className="text-red-400 text-sm">{errors.company.message}</p>
-                    )}
-                  </div>
+                    {errors.company && <p className="text-red-400 text-xs mt-1">{errors.company.message}</p>}
+                  </div> */}
 
                   {/* Job Title */}
-                  <div className="space-y-2">
-                    <label htmlFor="jobTitle" className="text-sm font-medium text-slate-300 flex items-center gap-2">
-                      <Briefcase className="w-4 h-4 text-blue-400" />
-                      Job Title *
+                  {/* <div>
+                    <label className="text-sm text-slate-300 flex items-center gap-1 mb-1">
+                      <Briefcase className="w-3 h-3" /> Job Title *
                     </label>
                     <input
                       {...register('jobTitle')}
-                      type="text"
-                      id="jobTitle"
+                      className={`w-full px-4 py-2.5 rounded-lg bg-white/5 border ${
+                        errors.jobTitle ? 'border-red-500/50' : 'border-white/10 focus:border-blue-500/50'
+                      } text-white placeholder:text-slate-500 focus:outline-none transition-colors`}
                       placeholder="Senior Developer"
-                      className={`w-full px-4 py-3 rounded-xl bg-white/5 border ${
-                        errors.jobTitle
-                          ? 'border-red-500/50'
-                          : 'border-white/10 focus:border-blue-500/50'
-                      } text-white placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20 transition-all duration-300`}
                     />
-                    {errors.jobTitle && (
-                      <p className="text-red-400 text-sm">{errors.jobTitle.message}</p>
-                    )}
-                  </div>
+                    {errors.jobTitle && <p className="text-red-400 text-xs mt-1">{errors.jobTitle.message}</p>}
+                  </div> */}
 
                   {/* Country */}
-                  <div className="space-y-2">
-                    <label htmlFor="country" className="text-sm font-medium text-slate-300 flex items-center gap-2">
-                      <Globe className="w-4 h-4 text-blue-400" />
-                      Country *
+                  <div>
+                    <label className="text-sm text-slate-300 flex items-center gap-1 mb-1">
+                      <Globe className="w-3 h-3" /> Country *
                     </label>
                     <select
                       {...register('country')}
-                      id="country"
-                      className={`w-full px-4 py-3 rounded-xl bg-white/5 border ${
-                        errors.country
-                          ? 'border-red-500/50'
-                          : 'border-white/10 focus:border-blue-500/50'
-                      } text-white focus:outline-none focus:ring-2 focus:ring-blue-500/20 transition-all duration-300`}
+                      className={`w-full px-4 py-2.5 rounded-lg bg-white/5 border ${
+                        errors.country ? 'border-red-500/50' : 'border-white/10'
+                      } text-white focus:outline-none transition-colors`}
                     >
                       <option value="" className="bg-slate-800">Select country</option>
                       {countries.map((country) => (
-                        <option key={country} value={country} className="bg-slate-800">
-                          {country}
-                        </option>
+                        <option key={country} value={country} className="bg-slate-800">{country}</option>
                       ))}
                     </select>
-                    {errors.country && (
-                      <p className="text-red-400 text-sm">{errors.country.message}</p>
-                    )}
+                    {errors.country && <p className="text-red-400 text-xs mt-1">{errors.country.message}</p>}
                   </div>
+                </div>
 
-                  {/* Ticket Type */}
-                  <div className="space-y-2 md:col-span-2 lg:col-span-1">
-                    <label htmlFor="ticketType" className="text-sm font-medium text-slate-300 flex items-center gap-2">
-                      <span className="w-4 h-4 rounded bg-blue-400 flex items-center justify-center text-xs text-white font-bold">$</span>
-                      Ticket Type *
-                    </label>
-                    <select
-                      {...register('ticketType')}
-                      id="ticketType"
-                      className={`w-full px-4 py-3 rounded-xl bg-white/5 border ${
-                        errors.ticketType
-                          ? 'border-red-500/50'
-                          : 'border-white/10 focus:border-blue-500/50'
-                      } text-white focus:outline-none focus:ring-2 focus:ring-blue-500/20 transition-all duration-300`}
-                    >
-                      <option value="" className="bg-slate-800">Select ticket type</option>
-                      {PRICING_TIERS.map((tier) => (
-                        <option key={tier.id} value={tier.name} className="bg-slate-800">
-                          {tier.name} - ${tier.price}
-                        </option>
-                      ))}
-                    </select>
-                    {errors.ticketType && (
-                      <p className="text-red-400 text-sm">{errors.ticketType.message}</p>
-                    )}
-                  </div>
-
-                  {/* Special Requests */}
-                  <div className="space-y-2 md:col-span-2">
-                    <label htmlFor="specialRequests" className="text-sm font-medium text-slate-300 flex items-center gap-2">
-                      <MessageSquare className="w-4 h-4 text-blue-400" />
-                      Special Requests (Optional)
-                    </label>
-                    <textarea
-                      {...register('specialRequests')}
-                      id="specialRequests"
-                      rows={4}
-                      placeholder="Any dietary restrictions, accessibility requirements, or other special requests..."
-                      className="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-white placeholder:text-slate-500 focus:outline-none focus:border-blue-500/50 focus:ring-2 focus:ring-blue-500/20 transition-all duration-300 resize-none"
+                {/* Badr University Student Section */}
+                <div className="mb-4 p-4 rounded-lg bg-blue-600/10 border border-blue-500/30">
+                  <label className="flex items-center gap-3 cursor-pointer">
+                    <input
+                      type="checkbox"
+                      {...register('isBadrStudent')}
+                      className="w-5 h-5 rounded bg-white/10 border-white/20 text-blue-500 focus:ring-blue-500"
                     />
-                  </div>
-                </div>
+                    <div>
+                      <span className="text-white font-medium">I am a Badr University student</span>
+                      <p className="text-xs text-blue-400">Upload your ID card to get {BADR_UNIVERSITY_DISCOUNT.percentage}% off</p>
+                    </div>
+                  </label>
 
-                {/* Submit Button */}
-                <div className="mt-8">
-                  <motion.button
-                    type="submit"
-                    disabled={isSubmitting}
-                    whileHover={{ scale: isSubmitting ? 1 : 1.02 }}
-                    whileTap={{ scale: isSubmitting ? 1 : 0.98 }}
-                    className="btn-premium w-full flex items-center justify-center gap-2 disabled:opacity-70 disabled:cursor-not-allowed"
-                  >
-                    {isSubmitting ? (
-                      <>
-                        <Loader2 className="w-5 h-5 animate-spin" />
-                        Processing...
-                      </>
-                    ) : (
-                      <>
-                        Complete Registration
-                      </>
-                    )}
-                  </motion.button>
-                </div>
+                  {isBadrStudent && (
+                    <motion.div
+                      initial={{ opacity: 0, height: 0 }}
+                      animate={{ opacity: 1, height: 'auto' }}
+                      className="mt-4"
+                    >
+                      <label className="text-sm text-slate-300 mb-2 block">Student ID Card *</label>
 
-                <p className="text-slate-500 text-xs text-center mt-4">
+                      {!studentIdPreview ? (
+                        <div
+                          onClick={() => fileInputRef.current?.click()}
+                          className={`border-2 border-dashed rounded-lg p-6 text-center cursor-pointer transition-all ${
+                            fileError ? 'border-red-500/50 bg-red-500/5' : 'border-blue-500/30 hover:border-blue-500/50'
+                          }`}
+                        >
+                          <Upload className="w-8 h-8 mx-auto text-blue-400 mb-2" />
+                          <p className="text-slate-300 text-sm mb-1">Click to upload your student ID</p>
+                          <p className="text-slate-500 text-xs">JPG, JPEG, or PNG (max {BADR_UNIVERSITY_DISCOUNT.maxFileSizeMB}MB)</p>
+                        </div>
+                      ) : (
+                        <div className="relative rounded-lg overflow-hidden border border-white/20">
+                          <img
+                            src={studentIdPreview}
+                            alt="Student ID Preview"
+                            className="w-full h-40 object-cover"
+                          />
+                          <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent flex items-end">
+                            <div className="p-4 w-full flex items-center justify-between">
+                              <div className="flex items-center gap-2 text-green-400">
+                                <CheckCircle2 className="w-4 h-4" />
+                                <span className="text-sm">{studentIdFile?.name}</span>
+                              </div>
+                              <button
+                                type="button"
+                                onClick={handleRemoveFile}
+                                className="p-2 rounded-lg bg-red-500/20 text-red-400 hover:bg-red-500/30 transition-colors"
+                              >
+                                <Trash2 className="w-4 h-4" />
+                              </button>
+                            </div>
+                          </div>
+                        </div>
+                      )}
+
+                      <input
+                        ref={fileInputRef}
+                        type="file"
+                        accept=".jpg,.jpeg,.png"
+                        onChange={handleFileChange}
+                        className="hidden"
+                      />
+
+                      {fileError && (
+                        <p className="text-red-400 text-xs mt-2">{fileError}</p>
+                      )}
+
+                      {discountApplied && !fileError && (
+                        <motion.p
+                          initial={{ opacity: 0 }}
+                          animate={{ opacity: 1 }}
+                          className="text-green-400 text-xs mt-2 flex items-center gap-1"
+                        >
+                          <CheckCircle className="w-3 h-3" />
+                          {BADR_UNIVERSITY_DISCOUNT.percentage}% discount applied! You save ${discountAmount.toFixed(2)}
+                        </motion.p>
+                      )}
+                    </motion.div>
+                  )}
+                </div>
+                <div className="mb-4">
+  <label className="text-sm text-slate-300 mb-2 block">
+    Payment Method *
+  </label>
+
+<select
+  {...register('paymentMethod')}
+  className="w-full focus:outline-none focus:ring-0 px-4 py-2.5 rounded-lg bg-white/5 border border-white/10 text-white"
+  defaultValue=""
+>
+  <option value="" disabled className="bg-slate-800">
+    Choose payment method
+  </option>
+
+  <option value="instapay" className="bg-slate-800">
+    Instapay
+  </option>
+
+  <option value="vodafone_cash" className="bg-slate-800">
+    Vodafone Cash
+  </option>
+</select>
+
+{errors.paymentMethod && (
+  <p className="text-red-400 text-xs mt-2">
+    {errors.paymentMethod.message}
+  </p>
+)}
+<div className="mt-3 p-4 rounded-xl bg-slate-800/50 border border-white/10">
+  <p className="text-slate-400 text-xs mb-1">Send payment to:</p>
+
+  {paymentMethod === "instapay" && (
+    <p className="text-blue-400 font-semibold">
+      Instapay: 01234567890
+    </p>
+  )}
+
+  {paymentMethod === "vodafone_cash" && (
+    <p className="text-red-400 font-semibold">
+      Vodafone Cash: 01098765432
+    </p>
+  )}
+</div>
+</div>
+{/* phone number */}
+<div className="mb-4">
+  <label className="text-sm text-slate-300 mb-2 block">
+    Your Payment Number *
+  </label>
+
+  <input
+    {...register('senderNumber')}
+    type="tel"
+    placeholder="01XXXXXXXXX"
+    className={`w-full px-4 py-2.5 rounded-lg bg-white/5 border ${
+      errors.senderNumber ? 'border-red-500/50' : 'border-white/10'
+    } text-white`}
+  />
+
+  {errors.senderNumber && (
+    <p className="text-red-400 text-xs mt-1">
+      {errors.senderNumber.message}
+    </p>
+  )}
+</div>
+{warning && (
+  <div className="mb-3 p-3 rounded-lg bg-red-500/10 border border-red-500/30 text-red-400 text-sm">
+    {warning}
+  </div>
+)}
+                {/* Submit */}
+                <motion.button
+                  type="submit"
+                  disabled={isSubmitting}
+                  whileHover={{ scale: isSubmitting ? 1 : 1.01 }}
+                  whileTap={{ scale: isSubmitting ? 1 : 0.99 }}
+                  className="btn-premium w-full flex items-center justify-center gap-2"
+                >
+                  {isSubmitting ? (
+                    <>
+                      <Loader2 className="w-5 h-5 animate-spin" />
+                      Processing...
+                    </>
+                  ) : (
+                    `Complete Registration - $${finalPrice.toFixed(2)}`
+                  )}
+                </motion.button>
+
+                <p className="text-slate-500 text-xs text-center mt-3">
                   By registering, you agree to our Terms of Service and Privacy Policy.
                 </p>
               </div>
@@ -339,6 +521,72 @@ export function Registration() {
           )}
         </AnimatePresence>
       </div>
+<AnimatePresence>
+  {showPaymentModal && (
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      className="fixed inset-0 bg-black/70 flex items-center justify-center z-50"
+    >
+      <motion.div
+        initial={{ scale: 0.9, y: 20 }}
+        animate={{ scale: 1, y: 0 }}
+        exit={{ scale: 0.9, y: 20 }}
+        className="bg-slate-900 border border-white/10 rounded-2xl p-6 w-full max-w-md"
+      >
+
+        {/* Title */}
+        <h2 className="text-xl font-bold text-white mb-2">
+          Confirm Your Registration
+        </h2>
+
+        <p className="text-slate-400 text-sm mb-4">
+          Please confirm that you have completed the payment to finalize your booking.
+        </p>
+
+        {/* Payment Info */}
+        <div className="bg-slate-800/50 p-3 rounded-lg mb-4">
+          <p className="text-slate-400 text-xs">Total Amount</p>
+          <p className="text-green-400 text-xl font-bold">
+            ${finalPrice.toFixed(2)}
+          </p>
+
+          <p className="text-xs mt-2 text-slate-400">
+            Method: <span className="text-white">{pendingData?.paymentMethod}</span>
+          </p>
+        </div>
+
+        {/* Warning */}
+        <div className="text-yellow-400 text-xs mb-4">
+          ⚠️ Your spot will NOT be reserved until payment is confirmed
+        </div>
+
+        {/* Buttons */}
+        <div className="flex gap-3">
+          
+          <button
+            onClick={handleConfirmPaid}
+            className="flex-1 bg-green-500 hover:bg-green-600 text-white py-2 rounded-lg transition"
+          >
+            I’ve Paid
+          </button>
+
+          <button
+            onClick={() => {
+              setShowPaymentModal(false);
+              setWarning("You must complete payment to reserve your seat.!");
+            }}            className="flex-1 bg-red-500/20 hover:bg-red-500/30 text-red-400 py-2 rounded-lg"
+          >
+            Cancel
+          </button>
+
+        </div>
+
+      </motion.div>
+    </motion.div>
+  )}
+</AnimatePresence>
     </section>
   );
 }

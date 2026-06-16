@@ -10,7 +10,7 @@ const socialLinks = [
   { name: 'LinkedIn', icon: Linkedin, href: SITE_CONFIG.social.linkedin },
   { name: 'Instagram', icon: Instagram, href: SITE_CONFIG.social.instagram },
   { name: 'Facebook', icon: Facebook, href: SITE_CONFIG.social.facebook },
-  { name: 'YouTube', icon: Youtube, href: 'https://youtube.com/@techsummit' },
+  { name: 'YouTube', icon: Youtube, href: 'https://youtube.com/@BusinessGuide' },
 ];
 
 export function Footer() {
@@ -117,7 +117,8 @@ export function Footer() {
         {/* Bottom Bar */}
         <div className="mt-12 pt-8 border-t border-white/10 flex flex-col sm:flex-row items-center justify-between gap-4">
           <p className="text-slate-400 text-sm">
-            � {new Date().getFullYear()} TechSummit. All rights reserved.
+            � {new Date().getFullYear()} Business
+Guide. All rights reserved.
           </p>
 
           {/* Social Links */}

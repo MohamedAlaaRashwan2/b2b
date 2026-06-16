@@ -8,8 +8,8 @@ export interface Speaker {
   image: string;
   social: {
     linkedin?: string;
-    twitter?: string;
-    website?: string;
+    facebook?: string;
+    instagram?: string;
   };
 }
 

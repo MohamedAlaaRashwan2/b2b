@@ -75,14 +75,14 @@ export default function HomePage() {
         <main className="bg-slate-950">
           <Hero />
           <About />
-          <Highlights />
+          {/* <Highlights /> */}
           <Speakers />
           <Schedule />
           <Gallery />
           <Pricing />
           <Registration />
-          <Testimonials />
-          <Sponsors />
+          {/* <Testimonials /> */}
+          {/* <Sponsors /> */}
           <Location />
           <FAQ />
           <Newsletter />

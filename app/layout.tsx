@@ -70,8 +70,8 @@ export const metadata: Metadata = {
     title: `${SITE_CONFIG.name} | ${EVENT_INFO.tagline}`,
     description: EVENT_INFO.description,
     images: ['/og-image.png'],
-    creator: '@techsummit',
-    site: '@techsummit',
+    creator: '@BusinessGuide',
+    site: '@BusinessGuide',
   },
   robots: {
     index: true,

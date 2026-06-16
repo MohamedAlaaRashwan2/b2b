@@ -84,7 +84,7 @@ export function Schedule() {
 
   // Group by time or maintain order
   const groupedSchedule = filteredSchedule.reduce((acc, item) => {
-    const day = item.id <= '7' ? 'Day 1' : item.id <= '11' ? 'Day 2' : 'Day 3';
+    const day = item.id <= '7' ? 'Day 1' : 'Day 1' ;
     if (!acc[day]) acc[day] = [];
     acc[day].push(item);
     return acc;
@@ -184,13 +184,6 @@ export function Schedule() {
           viewport={{ once: true }}
           className="text-center mt-12"
         >
-          <motion.button
-            whileHover={{ scale: 1.02 }}
-            whileTap={{ scale: 0.98 }}
-            className="btn-glass"
-          >
-            Download Full Schedule
-          </motion.button>
         </motion.div>
       </div>
     </section>
