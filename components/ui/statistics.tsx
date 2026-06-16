@@ -32,7 +32,7 @@ function AnimatedCounter({ target, suffix = '' }: { target: number; suffix?: str
   }, [isInView, target]);
 
   return (
-    <span ref={ref} className="tabular-nums">
+    <span ref={ref} className="tabular-nums ">
       {count.toLocaleString()}
       {suffix}
     </span>
@@ -52,7 +52,7 @@ export function Statistics() {
           className="text-center"
         >
           <div className="glass-card h-[100%] p-3 md:p-6 rounded-2xl">
-            <div className="text-xl md:text-5xl font-bold text-white mb-2">
+            <div className="text-x md:text-5xl font-bold text-white mb-2">
               <AnimatedCounter target={stat.value} suffix={stat.suffix} />
             </div>
             <p className="text-slate-400 text-sm md:text-base">{stat.label}</p>

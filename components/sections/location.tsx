@@ -47,7 +47,7 @@ export function Location() {
           >
             <div className="relative aspect-square md:aspect-video lg:aspect-square">
               <iframe
-                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3153.5249087799258!2d-122.40162999999999!3d37.783671099999995!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x8085807e6d8a89e1%3A0x5e7e5a4a5e6f0b0c!2sMoscone%20Center!5e0!3m2!1sen!2sus!4v1699999999999!5m2!1sen!2sus"
+                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d6907.489404139476!2d31.2390376!3d30.0441813!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x145840c792ff5ed5%3A0x27392189a2c25351!2z2KfZhNit2LHZhSDYp9mE2YrZiNmG2KfZhtmK!5e0!3m2!1sar!2seg!4v1781639689120!5m2!1sar!2seg"
                 width="100%"
                 height="100%"
                 style={{ border: 0 }}

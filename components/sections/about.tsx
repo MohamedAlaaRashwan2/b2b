@@ -4,6 +4,7 @@ import { motion } from 'framer-motion';
 import { Users, GraduationCap, TrendingUp, Heart } from 'lucide-react';
 import { BENEFITS } from '@/constants';
 import { cn } from '@/lib/utils';
+import Image from 'next/image';
 
 const iconMap: Record<string, React.ComponentType<{ className?: string }>> = {
   Users,
@@ -110,8 +111,10 @@ export function About() {
                 whileHover={{ scale: 1.02 }}
                 className="glass-card rounded-2xl overflow-hidden aspect-[4/3]"
               >
-                <img
-                  src="https://images.pexels.com/photos/1540576/pexels-photo-1540576.jpeg?auto=compress&cs=tinysrgb&w=600"
+                <Image
+                  width={100}
+                  height={100}
+                  src="/about1.jpeg"
                   alt="Conference hall"
                   className="w-full h-full object-cover"
                 />
@@ -120,8 +123,10 @@ export function About() {
                 whileHover={{ scale: 1.02 }}
                 className="glass-card rounded-2xl overflow-hidden aspect-square"
               >
-                <img
-                  src="https://images.pexels.com/photos/1181533/pexels-photo-1181533.jpeg?auto=compress&cs=tinysrgb&w=400"
+                <Image
+                  width={100}
+                  height={100}
+                  src="/about2.jpeg"
                   alt="Networking event"
                   className="w-full h-full object-cover"
                 />
@@ -132,8 +137,10 @@ export function About() {
                 whileHover={{ scale: 1.02 }}
                 className="glass-card rounded-2xl overflow-hidden aspect-square"
               >
-                <img
-                  src="https://images.pexels.com/photos/1181406/pexels-photo-1181406.jpeg?auto=compress&cs=tinysrgb&w=400"
+                <Image
+                  width={100}
+                  height={100}
+                  src="/about8.jpg"
                   alt="Workshop session"
                   className="w-full h-full object-cover"
                 />
@@ -142,8 +149,10 @@ export function About() {
                 whileHover={{ scale: 1.02 }}
                 className="glass-card rounded-2xl overflow-hidden aspect-[4/3]"
               >
-                <img
-                  src="https://images.pexels.com/photos/2388736/pexels-photo-2388736.jpeg?auto=compress&cs=tinysrgb&w=600"
+                <Image
+                  width={100}
+                  height={100}
+                  src="/about4.jpeg"
                   alt="Tech showcase"
                   className="w-full h-full object-cover"
                 />

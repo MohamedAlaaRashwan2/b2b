@@ -21,8 +21,8 @@ export const EVENT_INFO: EventInfo = {
   tagline: 'Where Innovation Meets Inspiration',
   date: 'June 26, 2026',
   time: '10:00 AM - 8:00 PM PST',
-  venue: 'Downtown Cairo',
-  location: 'New Cairooooo, Madinaty',
+  venue: 'Cairo',
+  location: 'El Tahrir Street, Bab El Louq',
   description: 'Join us for three transformative days of keynotes, workshops, and networking with the world\'s leading tech innovators.',
 };
 
@@ -35,7 +35,7 @@ export const NAV_ITEMS: NavItem[] = [
   { label: 'Schedule', href: '#schedule' },
   { label: 'Gallery', href: '#gallery' },
   { label: 'Pricing', href: '#pricing' },
-  { label: 'Sponsors', href: '#sponsors' },
+  { label: 'Register', href: '#register' },
   { label: 'FAQ', href: '#faq' },
   { label: 'Contact', href: '#contact' },
 ];
@@ -279,15 +279,15 @@ export const SCHEDULE: ScheduleItem[] = [
 
 export const GALLERY_IMAGES: GalleryImage[] = [
   { id: '1', src: '/mostafaAlaa.png', alt: 'Main conference hall', category: 'conference' },
-  { id: '2', src: 'https://images.pexels.com/photos/2774534/pexels-photo-2774534.jpeg?auto=compress&cs=tinysrgb&w=800', alt: 'Workshop session', category: 'workshop' },
-  { id: '3', src: 'https://images.pexels.com/photos/1181533/pexels-photo-1181533.jpeg?auto=compress&cs=tinysrgb&w=800', alt: 'Networking event', category: 'networking' },
-  { id: '4', src: 'https://images.pexels.com/photos/1181678/pexels-photo-1181678.jpeg?auto=compress&cs=tinysrgb&w=800', alt: 'Speaker presentation', category: 'speaker' },
-  { id: '5', src: 'https://images.pexels.com/photos/2388736/pexels-photo-2388736.jpeg?auto=compress&cs=tinysrgb&w=800', alt: 'Tech showcase', category: 'conference' },
-  { id: '6', src: 'https://images.pexels.com/photos/416405/pexels-photo-416405.jpeg?auto=compress&cs=tinysrgb&w=800', alt: 'Hands-on workshop', category: 'workshop' },
-  { id: '7', src: 'https://images.pexels.com/photos/1367169/pexels-photo-1367169.jpeg?auto=compress&cs=tinysrgb&w=800', alt: 'Networking dinner', category: 'networking' },
-  { id: '8', src: 'https://images.pexels.com/photos/775358/pexels-photo-775358.jpeg?auto=compress&cs=tinysrgb&w=800', alt: 'Panel discussion', category: 'speaker' },
-  { id: '9', src: 'https://images.pexels.com/photos/260206/pexels-photo-260206.jpeg?auto=compress&cs=tinysrgb&w=800', alt: 'Innovation stage', category: 'conference' },
-  { id: '10', src: 'https://images.pexels.com/photos/1181406/pexels-photo-1181406.jpeg?auto=compress&cs=tinysrgb&w=800', alt: 'Breakout session', category: 'workshop' },
+  { id: '2', src: '/about1.jpeg', alt: 'Workshop session', category: 'workshop' },
+  { id: '3', src: '/about2.jpeg', alt: 'Networking event', category: 'networking' },
+  { id: '4', src: '/about3.jpeg', alt: 'Speaker presentation', category: 'speaker' },
+  { id: '5', src: '/about4.jpeg', alt: 'Tech showcase', category: 'conference' },
+  { id: '6', src: '/about5.jpeg', alt: 'Hands-on workshop', category: 'workshop' },
+  { id: '7', src: '/about6.jpeg', alt: 'Networking dinner', category: 'networking' },
+  { id: '8', src: '/about7.jpeg', alt: 'Panel discussion', category: 'speaker' },
+  { id: '9', src: '/about8.jpg', alt: 'Innovation stage', category: 'conference' },
+  { id: '10', src: '/about9.jpg', alt: 'Breakout session', category: 'workshop' },
 ];
 
 export const TESTIMONIALS: Testimonial[] = [
@@ -357,7 +357,7 @@ export const SPONSORS: Sponsor[] = [
   { id: '12', name: 'Startup Hub', logo: 'https://images.pexels.com/photos/1181396/pexels-photo-1181396.jpeg?auto=compress&cs=tinysrgb&w=300', tier: 'community', website: 'https://startuphub.com' },
 ];
 
-export const TICKET_PRICE = 499;
+export const TICKET_PRICE = 999;
 
 export const BADR_UNIVERSITY_DISCOUNT = {
   percentage: 15,
@@ -397,7 +397,7 @@ export const PRICING_TIERS: PricingTier[] = [
       'Speaker meet & greet',
       'Priority seating',
     ],
-    remaining: 0,
+    remaining: 220,
     total: 220,
   },
   // {

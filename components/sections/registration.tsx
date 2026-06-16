@@ -219,7 +219,7 @@ const submitToServer = async () => {
                 <div className="mb-6 p-4 rounded-lg bg-slate-800/50 border border-slate-700">
                   <div className="flex items-center justify-between mb-2">
                     <span className="text-slate-400">Ticket Price:</span>
-                    <span className="text-white">${TICKET_PRICE}</span>
+                    <span className="text-white">EGP {TICKET_PRICE}</span>
                   </div>
                   {discountApplied && (
                     <>
@@ -228,18 +228,18 @@ const submitToServer = async () => {
                           <BadgePercent className="w-4 h-4" />
                           Student Discount (-{BADR_UNIVERSITY_DISCOUNT.percentage}%):
                         </span>
-                        <span className="text-green-400">-${discountAmount.toFixed(2)}</span>
+                        <span className="text-green-400">-EGP {discountAmount.toFixed(2)}</span>
                       </div>
                       <div className="flex items-center justify-between pt-2 border-t border-slate-600">
                         <span className="text-white font-medium">Final Price:</span>
-                        <span className="text-2xl font-bold text-green-400">${finalPrice.toFixed(2)}</span>
+                        <span className="text-2xl font-bold text-green-400">EGP {finalPrice.toFixed(2)}</span>
                       </div>
                     </>
                   )}
                   {!discountApplied && (
                     <div className="flex items-center justify-between pt-2 border-t border-slate-600">
                       <span className="text-white font-medium">Total:</span>
-                      <span className="text-2xl font-bold text-white">${TICKET_PRICE}</span>
+                      <span className="text-2xl font-bold text-white">EGP {TICKET_PRICE}</span>
                     </div>
                   )}
                 </div>
@@ -419,7 +419,7 @@ const submitToServer = async () => {
                           className="text-green-400 text-xs mt-2 flex items-center gap-1"
                         >
                           <CheckCircle className="w-3 h-3" />
-                          {BADR_UNIVERSITY_DISCOUNT.percentage}% discount applied! You save ${discountAmount.toFixed(2)}
+                          {BADR_UNIVERSITY_DISCOUNT.percentage}% discount applied! You save EGP {discountAmount.toFixed(2)}
                         </motion.p>
                       )}
                     </motion.div>
