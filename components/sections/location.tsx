@@ -111,7 +111,7 @@ export function Location() {
 
             {/* Directions Button */}
             <motion.a
-              href="https://www.google.com/maps/dir/?api=1&destination=Moscone+Center+San+Francisco"
+              href="https://maps.app.goo.gl/d1ZDZGnbhUUQKNSe9"
               target="_blank"
               rel="noopener noreferrer"
               whileHover={{ scale: 1.02 }}
