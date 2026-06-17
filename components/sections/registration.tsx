@@ -287,7 +287,7 @@ const submitToServer = async () => {
                       className={`w-full px-4 py-2.5 rounded-lg bg-white/5 border ${
                         errors.phone ? 'border-red-500/50' : 'border-white/10 focus:border-blue-500/50'
                       } text-white placeholder:text-slate-500 focus:outline-none transition-colors`}
-                      placeholder="+1 (555) 123-4567"
+                      placeholder="+20123456789"
                     />
                     {errors.phone && <p className="text-red-400 text-xs mt-1">{errors.phone.message}</p>}
                   </div>

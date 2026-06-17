@@ -398,7 +398,7 @@ export const PRICING_TIERS: PricingTier[] = [
       'Priority seating',
     ],
     remaining: 220,
-    total: 220,
+    total: 250,
   },
   // {
   //   id: '3',
