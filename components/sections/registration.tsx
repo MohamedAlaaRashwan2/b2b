@@ -90,7 +90,7 @@ export function Registration() {
   const code = couponCode.trim().toUpperCase();
 
   if (code === "uni10") {
-    setCouponDiscount(20);
+    setCouponDiscount(10);
     setCouponError("");
     if (code === "uni10") {
       setDiscountApplied2(true);
@@ -99,7 +99,7 @@ export function Registration() {
     }
   }
   else if (code === "Ah10") {
-    setCouponDiscount(50);
+    setCouponDiscount(10);
     setCouponError("");
     if (code === "Ah10") {
       setDiscountApplied2(true);
