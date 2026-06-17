@@ -77,7 +77,7 @@ export default function HomePage() {
           <Speakers />
           <Schedule />
           <Gallery />
-          <Pricing />
+          {/* <Pricing /> */}
           <Registration />
           {/* <Testimonials /> */}
           {/* <Sponsors /> */}

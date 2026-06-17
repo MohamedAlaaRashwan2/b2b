@@ -34,12 +34,7 @@ const countries = [
 export function Registration() {
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [discountApplied, setDiscountApplied] = useState(false);
   const [discountApplied2, setDiscountApplied2] = useState(false);
-  const [studentIdFile, setStudentIdFile] = useState<File | null>(null);
-  const [studentIdPreview, setStudentIdPreview] = useState<string | null>(null);
-  const [fileError, setFileError] = useState<string | null>(null);
-  const fileInputRef = useRef<HTMLInputElement>(null);
   const [showPaymentModal, setShowPaymentModal] = useState(false);
   const [pendingData, setPendingData] = useState<any>(null);
   const [paymentConfirmed, setPaymentConfirmed] = useState(false);
@@ -47,6 +42,8 @@ export function Registration() {
   const [couponCode, setCouponCode] = useState("");
   const [couponDiscount, setCouponDiscount] = useState(0);
   const [couponError, setCouponError] = useState("");
+  const [senderNumber, setsenderNumber] = useState("");
+  
   const {
     register,
     handleSubmit,
@@ -126,10 +123,6 @@ const submitToServer = async () => {
   formData.append("senderNumber", data.senderNumber);
   formData.append("finalPrice", String(finalPrice));
   formData.append("couponCode", couponCode);
-  formData.append("isBadrStudent", String(isBadrStudent));
-  if (studentIdFile) {
-  formData.append("studentId", studentIdFile);
-}
 
 
   const res = await fetch("https://lightslategray-skunk-815178.hostingersite.com/register1.php", {
@@ -139,8 +132,7 @@ const submitToServer = async () => {
 
   
   const result = await res.json();
-console.log("STATUS:", res.status);
-console.log("RAW RESPONSE:", result);
+      console.log("Server response:", formData);
   setIsSubmitting(false);
 
   if (result.success) {
