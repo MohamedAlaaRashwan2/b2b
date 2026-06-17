@@ -87,8 +87,8 @@ export function Registration() {
   };
   
   const applyCoupon = () => {
-  const code = couponCode.trim().toUpperCase();
-
+  const code = couponCode.trim();
+   console.log("Applying coupon code:", code);
   if (code === "uni10") {
     setCouponDiscount(10);
     setCouponError("");
@@ -185,8 +185,10 @@ const submitToServer = async () => {
     body: formData,
   });
 
+  
   const result = await res.json();
-
+console.log("STATUS:", res.status);
+console.log("RAW RESPONSE:", result);
   setIsSubmitting(false);
 
   if (result.success) {
@@ -263,43 +265,32 @@ const submitToServer = async () => {
               <div className="glass-card p-6 md:p-8 rounded-xl">
                 {/* Price Summary */}
                 <div className="mb-6 p-4 rounded-lg bg-slate-800/50 border border-slate-700">
-  <div className="flex items-center justify-between mb-2">
-    <span className="text-slate-400">Ticket Price:</span>
-    <span className="text-white">EGP {TICKET_PRICE}</span>
-  </div>
-
-  {discountApplied && (
-    <div className="flex items-center justify-between mb-2">
-      <span className="text-green-400 flex items-center gap-1">
-        <BadgePercent className="w-4 h-4" />
-        Student Discount (-{BADR_UNIVERSITY_DISCOUNT.percentage}%)
-      </span>
-      <span className="text-green-400">
-        -EGP {studentDiscountAmount.toFixed(2)}
-      </span>
-    </div>
-  )}
-
-  {discountApplied2 && (
-    <div className="flex items-center justify-between mb-2">
-      <span className="text-green-400 flex items-center gap-1">
-        <BadgePercent className="w-4 h-4" />
-        Coupon {couponCode} (-{couponDiscount}%)
-      </span>
-      <span className="text-green-400">
-        -EGP {couponDiscountAmount.toFixed(2)}
-      </span>
-    </div>
-  )}
-
-  <div className="flex items-center justify-between pt-2 border-t border-slate-600">
-    <span className="text-white font-medium">Final Price:</span>
-    <span className="text-2xl font-bold text-green-400">
-      EGP {finalPrice.toFixed(2)}
-    </span>
-  </div>
-</div>
-
+                  <div className="flex items-center justify-between mb-2">
+                    <span className="text-slate-400">Ticket Price:</span>
+                    <span className="text-white">EGP {TICKET_PRICE}</span>
+                  </div>
+                  {discountApplied2 && (
+                    <>
+                      <div className="flex items-center justify-between mb-2">
+                        <span className="text-green-400 flex items-center gap-1">
+                          <BadgePercent className="w-4 h-4" />
+                          Coupon {couponCode} (-{couponDiscount}%)
+                        </span>
+                        <span className="text-green-400">-EGP {couponDiscountAmount.toFixed(2)}</span>
+                      </div>
+                      <div className="flex items-center justify-between pt-2 border-t border-slate-600">
+                        <span className="text-white font-medium">Final Price:</span>
+                        <span className="text-2xl font-bold text-green-400">EGP {finalPrice.toFixed(2)}</span>
+                      </div>
+                    </>
+                  )}
+                  {!discountApplied2 && (
+                    <div className="flex items-center justify-between pt-2 border-t border-slate-600">
+                      <span className="text-white font-medium">Total:</span>
+                      <span className="text-2xl font-bold text-white">EGP {TICKET_PRICE}</span>
+                    </div>
+                  )}
+                </div>
                 <div className="grid md:grid-cols-2 gap-4 mb-4">
                   {/* Full Name */}
                   <div>
@@ -399,7 +390,7 @@ const submitToServer = async () => {
                 </div>
 
                 {/* Badr University Student Section */}
-                <div className="mb-4 p-4 rounded-lg bg-blue-600/10 border border-blue-500/30">
+                {/* <div className="mb-4 p-4 rounded-lg bg-blue-600/10 border border-blue-500/30">
                   <label className="flex items-center gap-3 cursor-pointer">
                     <input
                       type="checkbox"
@@ -480,7 +471,7 @@ const submitToServer = async () => {
                       )}
                     </motion.div>
                   )}
-                </div>
+                </div> */}
                 <div className="mb-4">
   <label className="text-sm text-slate-300 block mb-2">
     Coupon Code
