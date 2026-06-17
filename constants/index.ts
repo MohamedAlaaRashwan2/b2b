@@ -278,7 +278,7 @@ export const SCHEDULE: ScheduleItem[] = [
 ];
 
 export const GALLERY_IMAGES: GalleryImage[] = [
-  { id: '1', src: '/mostafaAlaa.png', alt: 'Main conference hall', category: 'conference' },
+  { id: '1', src: '/about99.jpeg', alt: 'Main conference hall', category: 'conference' },
   { id: '2', src: '/about1.jpeg', alt: 'Workshop session', category: 'workshop' },
   { id: '3', src: '/about2.jpeg', alt: 'Networking event', category: 'networking' },
   { id: '4', src: '/about3.jpeg', alt: 'Speaker presentation', category: 'speaker' },
