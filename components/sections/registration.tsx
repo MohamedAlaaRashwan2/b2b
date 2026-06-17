@@ -407,7 +407,7 @@ const submitToServer = async () => {
                       className="w-5 h-5 rounded bg-white/10 border-white/20 text-blue-500 focus:ring-blue-500"
                     />
                     <div>
-                      <span className="text-white font-medium">I am a Badr University student</span>
+                      <span className="text-white font-medium">I am a University student</span>
                       <p className="text-xs text-blue-400">Upload your ID card to get {BADR_UNIVERSITY_DISCOUNT.percentage}% off</p>
                     </div>
                   </label>
