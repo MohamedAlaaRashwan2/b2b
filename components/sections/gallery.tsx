@@ -110,11 +110,9 @@ export function Gallery() {
                 transition={{ delay: index * 0.05 }}
                 whileHover={{ scale: 1.02 }}
                 onClick={() => setSelectedImage(Number(image.id))}
-                className={`relative group cursor-pointer overflow-hidden rounded-2xl ${
-                  index % 5 === 0 ? 'row-span-2' : ''
-                }`}
+                className={`relative group cursor-pointer overflow-hidden rounded-2xl`}
               >
-                <div className={`relative ${index % 5 === 0 ? 'aspect-[3/4]' : 'aspect-square'}`}>
+                <div className={`relative aspect-square`}>
                   <Image
                     src={image.src}
                     alt={image.alt}
