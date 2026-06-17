@@ -456,7 +456,7 @@ const submitToServer = async () => {
     <button
       type="button"
       onClick={applyCoupon}
-      className="btn-premium"
+      className="btn-premium text-xs px-4 py-2"
     >
       Apply
     </button>
