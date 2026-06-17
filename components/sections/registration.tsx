@@ -35,6 +35,7 @@ export function Registration() {
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [discountApplied, setDiscountApplied] = useState(false);
+  const [discountApplied2, setDiscountApplied2] = useState(false);
   const [studentIdFile, setStudentIdFile] = useState<File | null>(null);
   const [studentIdPreview, setStudentIdPreview] = useState<string | null>(null);
   const [fileError, setFileError] = useState<string | null>(null);
@@ -43,6 +44,9 @@ export function Registration() {
   const [pendingData, setPendingData] = useState<any>(null);
   const [paymentConfirmed, setPaymentConfirmed] = useState(false);
   const [warning, setWarning] = useState("");
+  const [couponCode, setCouponCode] = useState("");
+  const [couponDiscount, setCouponDiscount] = useState(0);
+  const [couponError, setCouponError] = useState("");
   const {
     register,
     handleSubmit,
@@ -59,8 +63,17 @@ export function Registration() {
   const paymentMethod = watch("paymentMethod");
   const isBadrStudent = watch('isBadrStudent');
 
-  const discountAmount = discountApplied ? (TICKET_PRICE * BADR_UNIVERSITY_DISCOUNT.percentage) / 100 : 0;
-  const finalPrice = discountApplied ? TICKET_PRICE - discountAmount : TICKET_PRICE;
+  const studentDiscountAmount = discountApplied
+    ? (TICKET_PRICE * BADR_UNIVERSITY_DISCOUNT.percentage) / 100
+    : 0;
+  
+  const couponDiscountAmount = 
+    (TICKET_PRICE * couponDiscount) / 100;
+  
+  const finalPrice =
+    TICKET_PRICE -
+    studentDiscountAmount -
+    couponDiscountAmount;
 
   const validateFile = (file: File): string | null => {
     if (!BADR_UNIVERSITY_DISCOUNT.allowedFileTypes.includes(file.type)) {
@@ -72,6 +85,33 @@ export function Registration() {
     }
     return null;
   };
+  
+  const applyCoupon = () => {
+  const code = couponCode.trim().toUpperCase();
+
+  if (code === "uni10") {
+    setCouponDiscount(20);
+    setCouponError("");
+    if (code === "uni10") {
+      setDiscountApplied2(true);
+    }else {
+      setDiscountApplied2(false);
+    }
+  }
+  else if (code === "Ah10") {
+    setCouponDiscount(50);
+    setCouponError("");
+    if (code === "Ah10") {
+      setDiscountApplied2(true);
+    }else {
+      setDiscountApplied2(false);
+    }
+  }
+  else {
+    setCouponDiscount(0);
+    setCouponError("Invalid coupon code");
+  }
+};
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -133,6 +173,12 @@ const submitToServer = async () => {
   formData.append("paymentMethod", data.paymentMethod);
   formData.append("senderNumber", data.senderNumber);
   formData.append("finalPrice", String(finalPrice));
+  formData.append("couponCode", couponCode);
+  formData.append("isBadrStudent", String(isBadrStudent));
+  if (studentIdFile) {
+  formData.append("studentId", studentIdFile);
+}
+
 
   const res = await fetch("https://lightslategray-skunk-815178.hostingersite.com/register1.php", {
     method: "POST",
@@ -217,32 +263,42 @@ const submitToServer = async () => {
               <div className="glass-card p-6 md:p-8 rounded-xl">
                 {/* Price Summary */}
                 <div className="mb-6 p-4 rounded-lg bg-slate-800/50 border border-slate-700">
-                  <div className="flex items-center justify-between mb-2">
-                    <span className="text-slate-400">Ticket Price:</span>
-                    <span className="text-white">EGP {TICKET_PRICE}</span>
-                  </div>
-                  {discountApplied && (
-                    <>
-                      <div className="flex items-center justify-between mb-2">
-                        <span className="text-green-400 flex items-center gap-1">
-                          <BadgePercent className="w-4 h-4" />
-                          Student Discount (-{BADR_UNIVERSITY_DISCOUNT.percentage}%):
-                        </span>
-                        <span className="text-green-400">-EGP {discountAmount.toFixed(2)}</span>
-                      </div>
-                      <div className="flex items-center justify-between pt-2 border-t border-slate-600">
-                        <span className="text-white font-medium">Final Price:</span>
-                        <span className="text-2xl font-bold text-green-400">EGP {finalPrice.toFixed(2)}</span>
-                      </div>
-                    </>
-                  )}
-                  {!discountApplied && (
-                    <div className="flex items-center justify-between pt-2 border-t border-slate-600">
-                      <span className="text-white font-medium">Total:</span>
-                      <span className="text-2xl font-bold text-white">EGP {TICKET_PRICE}</span>
-                    </div>
-                  )}
-                </div>
+  <div className="flex items-center justify-between mb-2">
+    <span className="text-slate-400">Ticket Price:</span>
+    <span className="text-white">EGP {TICKET_PRICE}</span>
+  </div>
+
+  {discountApplied && (
+    <div className="flex items-center justify-between mb-2">
+      <span className="text-green-400 flex items-center gap-1">
+        <BadgePercent className="w-4 h-4" />
+        Student Discount (-{BADR_UNIVERSITY_DISCOUNT.percentage}%)
+      </span>
+      <span className="text-green-400">
+        -EGP {studentDiscountAmount.toFixed(2)}
+      </span>
+    </div>
+  )}
+
+  {discountApplied2 && (
+    <div className="flex items-center justify-between mb-2">
+      <span className="text-green-400 flex items-center gap-1">
+        <BadgePercent className="w-4 h-4" />
+        Coupon {couponCode} (-{couponDiscount}%)
+      </span>
+      <span className="text-green-400">
+        -EGP {couponDiscountAmount.toFixed(2)}
+      </span>
+    </div>
+  )}
+
+  <div className="flex items-center justify-between pt-2 border-t border-slate-600">
+    <span className="text-white font-medium">Final Price:</span>
+    <span className="text-2xl font-bold text-green-400">
+      EGP {finalPrice.toFixed(2)}
+    </span>
+  </div>
+</div>
 
                 <div className="grid md:grid-cols-2 gap-4 mb-4">
                   {/* Full Name */}
@@ -419,12 +475,46 @@ const submitToServer = async () => {
                           className="text-green-400 text-xs mt-2 flex items-center gap-1"
                         >
                           <CheckCircle className="w-3 h-3" />
-                          {BADR_UNIVERSITY_DISCOUNT.percentage}% discount applied! You save EGP {discountAmount.toFixed(2)}
+                          {BADR_UNIVERSITY_DISCOUNT.percentage}% discount applied! You save EGP {studentDiscountAmount.toFixed(2)}
                         </motion.p>
                       )}
                     </motion.div>
                   )}
                 </div>
+                <div className="mb-4">
+  <label className="text-sm text-slate-300 block mb-2">
+    Coupon Code
+  </label>
+
+  <div className="flex gap-2">
+    <input
+      value={couponCode}
+      onChange={(e) => setCouponCode(e.target.value)}
+      placeholder="Enter coupon"
+      className="flex-1 px-4 py-2.5 rounded-lg bg-white/5 border border-white/10 text-white"
+    />
+
+    <button
+      type="button"
+      onClick={applyCoupon}
+      className="px-4 bg-blue-600 rounded-lg text-white"
+    >
+      Apply
+    </button>
+  </div>
+
+  {couponError && (
+    <p className="text-red-400 text-xs mt-2">
+      {couponError}
+    </p>
+  )}
+
+  {couponDiscount > 0 && (
+    <p className="text-green-400 text-xs mt-2">
+      Coupon Applied ({couponDiscount}% OFF)
+    </p>
+  )}
+</div>
                 <div className="mb-4">
   <label className="text-sm text-slate-300 mb-2 block">
     Payment Method *
@@ -458,7 +548,7 @@ const submitToServer = async () => {
 
   {paymentMethod === "instapay" && (
     <p className="text-blue-400 font-semibold">
-      Instapay: 01288333841
+      Instapay: 01288333941
     </p>
   )}
 
