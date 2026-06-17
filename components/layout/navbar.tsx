@@ -4,7 +4,6 @@ import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Menu, X, Sparkles } from 'lucide-react';
 import { NAV_ITEMS, SITE_CONFIG } from '@/constants';
-import { ThemeToggle } from './theme-toggle';
 import { useActiveSection } from '@/hooks/use-active-section';
 import { cn } from '@/lib/utils';
 import Image from 'next/image';
@@ -96,12 +95,11 @@ export function Navbar() {
             {/* Right Section */}
             <div className="flex items-center gap-3">
               <motion.a
-                href="#pricing"
                 onClick={(e) => {
                   e.preventDefault();
-                  handleNavClick('#pricing');
+                  handleNavClick('#register');
                 }}
-                className="hidden md:inline-flex btn-premium text-sm"
+                className="hidden cursor-pointer md:inline-flex btn-premium text-sm"
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
               >
@@ -179,12 +177,11 @@ export function Navbar() {
                   className="mt-auto"
                 >
                   <a
-                    href="#pricing"
                     onClick={(e) => {
                       e.preventDefault();
-                      handleNavClick('#pricing');
+                      handleNavClick('#register');
                     }}
-                    className="btn-premium w-full block text-center"
+                    className="btn-premium cursor-pointer w-full block text-center"
                   >
                     Register Now
                   </a>

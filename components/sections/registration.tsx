@@ -445,7 +445,7 @@ const submitToServer = async () => {
     Coupon Code
   </label>
 
-  <div className="flex gap-2">
+  <div className="flex gap-3">
     <input
       value={couponCode}
       onChange={(e) => setCouponCode(e.target.value)}
@@ -456,7 +456,7 @@ const submitToServer = async () => {
     <button
       type="button"
       onClick={applyCoupon}
-      className="px-4 bg-blue-600 rounded-lg text-white"
+      className="btn-premium"
     >
       Apply
     </button>
