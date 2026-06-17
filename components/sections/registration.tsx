@@ -62,30 +62,14 @@ export function Registration() {
   
   const paymentMethod = watch("paymentMethod");
   const isBadrStudent = watch('isBadrStudent');
-
-  const studentDiscountAmount = discountApplied
-    ? (TICKET_PRICE * BADR_UNIVERSITY_DISCOUNT.percentage) / 100
-    : 0;
-  
+  const specialDiscount = 349;
+  const discountedPrice = TICKET_PRICE - specialDiscount;
   const couponDiscountAmount = 
-    (TICKET_PRICE * couponDiscount) / 100;
-  
+    (discountedPrice * couponDiscount) / 100;
   const finalPrice =
     TICKET_PRICE -
-    studentDiscountAmount -
-    couponDiscountAmount;
-
-  const validateFile = (file: File): string | null => {
-    if (!BADR_UNIVERSITY_DISCOUNT.allowedFileTypes.includes(file.type)) {
-      return 'Please upload a valid image file (JPG, JPEG, or PNG)';
-    }
-    const maxSize = BADR_UNIVERSITY_DISCOUNT.maxFileSizeMB * 1024 * 1024;
-    if (file.size > maxSize) {
-      return `File size must be less than ${BADR_UNIVERSITY_DISCOUNT.maxFileSizeMB}MB`;
-    }
-    return null;
-  };
-  
+    specialDiscount
+    -couponDiscountAmount;
   const applyCoupon = () => {
   const code = couponCode.trim();
    console.log("Applying coupon code:", code);
@@ -112,38 +96,6 @@ export function Registration() {
     setCouponError("Invalid coupon code");
   }
 };
-
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      const error = validateFile(file);
-      if (error) {
-        setFileError(error);
-        setStudentIdFile(null);
-        setStudentIdPreview(null);
-        setDiscountApplied(false);
-        return;
-      }
-      setFileError(null);
-      setStudentIdFile(file);
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setStudentIdPreview(reader.result as string);
-      };
-      reader.readAsDataURL(file);
-      setDiscountApplied(true);
-    }
-  };
-
-  const handleRemoveFile = () => {
-    setStudentIdFile(null);
-    setStudentIdPreview(null);
-    setDiscountApplied(false);
-    setFileError(null);
-    if (fileInputRef.current) {
-      fileInputRef.current.value = '';
-    }
-  };
 
 const onSubmit = async (data: RegistrationFormData) => {
   setPendingData(data);
@@ -265,10 +217,24 @@ console.log("RAW RESPONSE:", result);
               <div className="glass-card p-6 md:p-8 rounded-xl">
                 {/* Price Summary */}
                 <div className="mb-6 p-4 rounded-lg bg-slate-800/50 border border-slate-700">
-                  <div className="flex items-center justify-between mb-2">
-                    <span className="text-slate-400">Ticket Price:</span>
-                    <span className="text-white">EGP {TICKET_PRICE}</span>
-                  </div>
+                  {/* السعر الأصلي */}
+                <div className="flex items-center justify-between mb-2">
+                  <span className="text-slate-400">Original Price:</span>
+                  <span className="text-red-400 line-through">
+                    EGP {TICKET_PRICE.toFixed(1)}
+                  </span>
+                </div>
+                
+                <div className="flex items-center justify-between mb-2">
+                  <span className="text-slate-400">Special Offer:</span>
+                  <span className="text-white">EGP {discountedPrice.toFixed(1)}</span>
+                </div>
+                
+                <div className="text-center my-3">
+                  <span className="inline-flex items-center px-3 py-1 rounded-full bg-green-500/10 text-green-400 font-semibold">
+                    Save EGP {specialDiscount}
+                  </span>
+                </div>
                   {discountApplied2 && (
                     <>
                       <div className="flex items-center justify-between mb-2">
@@ -276,18 +242,28 @@ console.log("RAW RESPONSE:", result);
                           <BadgePercent className="w-4 h-4" />
                           Coupon {couponCode} (-{couponDiscount}%)
                         </span>
-                        <span className="text-green-400">-EGP {couponDiscountAmount.toFixed(2)}</span>
+                        <span className="text-green-400">
+                          -EGP {couponDiscountAmount.toFixed(2)}
+                        </span>
                       </div>
                       <div className="flex items-center justify-between pt-2 border-t border-slate-600">
-                        <span className="text-white font-medium">Final Price:</span>
-                        <span className="text-2xl font-bold text-green-400">EGP {finalPrice.toFixed(2)}</span>
+                        <span className="text-white font-medium">
+                          Final Price:
+                        </span>
+                        <span className="text-2xl font-bold text-green-400">
+                          EGP {finalPrice.toFixed(2)}
+                        </span>
                       </div>
                     </>
                   )}
                   {!discountApplied2 && (
                     <div className="flex items-center justify-between pt-2 border-t border-slate-600">
-                      <span className="text-white font-medium">Total:</span>
-                      <span className="text-2xl font-bold text-white">EGP {TICKET_PRICE}</span>
+                      <span className="text-white font-medium">
+                        Total:
+                      </span>
+                      <span className="text-2xl font-bold text-white">
+                        EGP {discountedPrice.toFixed(2)}
+                      </span>
                     </div>
                   )}
                 </div>
