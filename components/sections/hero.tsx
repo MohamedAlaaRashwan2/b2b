@@ -114,13 +114,12 @@ export function Hero() {
               className="flex flex-wrap justify-center lg:justify-start gap-4"
             >
               <motion.a
-                href="#pricing"
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
-                className="btn-premium md:text-lg text-sm"
+                className="btn-premium cursor-pointer md:text-lg text-sm"
                 onClick={(e) => {
                   e.preventDefault();
-                  document.querySelector('#pricing')?.scrollIntoView({ behavior: 'smooth' });
+                  document.querySelector('#register')?.scrollIntoView({ behavior: 'smooth' });
                 }}
               >
                 Register Now
